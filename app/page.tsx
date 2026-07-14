@@ -24,6 +24,53 @@ const profiles: Record<Dimension, {
   超越: { title: "凝望无垠", english: "Gaze into the Vast", totem: "星环天门", mark: "◌", invocation: "在星河、古老时间与万物秩序前放下答案，让有限的自我被更辽阔的存在环抱。", plain: "你需要让生命不只停留在眼前的效率与得失。", alive: "星空、古老建筑、历史、神话、自然整体和仪式，会让有限的自我重新找到位置，恢复生活的纵深。", attract: "你容易被有精神纵深、敬畏感和历史意识的人吸引，也会留意古老符号、宇宙与自然奇观。", life: "你需要感到正在回应比短期回报更大的价值；不可穷尽之物不一定给你答案，却会重新排列焦虑。", reframe: "超越不是逃避现实。真正的无垠并不取消有限，而是让具体生活被更温柔地看见。", nourish: "最近，一种更辽阔的尺度正在托住你。它没有替你回答问题，却让问题不再只有眼前大小。", now: "它邀请你暂时离开效率和结果，接触一件能让自己安静或感到敬畏的事。", actions: ["安静看十分钟天空或水面。", "走进旧建筑或自然深处半天。", "建立四周观星或私人仪式。"], experiences: ["天文观察", "古迹行走", "自然静默"], book: "《编织甜草》· Robin Wall Kimmerer", film: "《瞬息全宇宙》· Daniels", echo: "有些问题不需要被解开。它们存在，是为了让生命知道自己并不孤立。" }
 };
 
+const culturalRecommendations: Record<Dimension, {
+  film: { title: string; meta: string; why: string };
+  book: { title: string; meta: string; why: string };
+  quote: { text: string; author: string };
+}> = {
+  探索: {
+    film: { title: "《拾穗者与我》", meta: "Agnès Varda · 2000 · 烂番茄 92%", why: "跟随一位女性创作者在城市与田野拾取被忽略的事物，适合仍愿意为未知保留位置的你。" },
+    book: { title: "《迷失指南》", meta: "Rebecca Solnit", why: "它不催你找到标准答案，而是练习在偏离路线时，看见新的世界和新的自己。" },
+    quote: { text: "为未知留一扇门，也为黑暗中的入口留一扇门。", author: "Rebecca Solnit" }
+  },
+  创造: {
+    film: { title: "《阿涅斯的海滩》", meta: "Agnès Varda · 2008 · 烂番茄 96%", why: "一位女性导演用镜子、海滩和记忆重组自己的一生，提醒你：表达本身就是理解经验的方法。" },
+    book: { title: "《阿尔戈英雄》", meta: "Maggie Nelson", why: "把亲密关系、身体经验与思想写作缝合在一起，适合正在寻找个人表达语言的你。" },
+    quote: { text: "诗不是奢侈品。", author: "Audre Lorde" }
+  },
+  共鸣: {
+    film: { title: "《小妈妈》", meta: "Céline Sciamma · 2021 · 烂番茄 97%", why: "一部关于母女、哀伤与童年相遇的轻盈寓言，让关系中的理解跨过年龄，也跨过时间。" },
+    book: { title: "《爱的全部》", meta: "bell hooks", why: "把爱从模糊感受变成关怀、诚实、责任和边界，适合重视真实回应的你。" },
+    quote: { text: "爱是一种行动，从来不只是一种感觉。", author: "bell hooks" }
+  },
+  理解: {
+    film: { title: "《坠落的审判》", meta: "Justine Triet · 2023 · 烂番茄 96%", why: "它把亲密关系、语言权力与偏见变成一场无法轻易定论的心理审视，适合愿意追问复杂性的你。" },
+    book: { title: "《The Gendered Brain》", meta: "Gina Rippon", why: "从神经科学拆解“男性大脑／女性大脑”的迷思，帮助你分辨事实、文化与长期偏见。" },
+    quote: { text: "当一个女人说出真相，她也在为更多真相创造可能。", author: "Adrienne Rich" }
+  },
+  感知: {
+    film: { title: "《绿光》", meta: "Éric Rohmer · 1986 · 烂番茄 94%", why: "它不急着解决孤独，而是耐心跟随一位女性的情绪、身体和直觉，直到微小征兆重新显现。" },
+    book: { title: "《编织甜草》", meta: "Robin Wall Kimmerer", why: "植物学、原住民智慧与女性照料经验在这里交织，让感官重新成为认识世界的路径。" },
+    quote: { text: "照顾自己不是自我放纵，而是自我保存。", author: "Audre Lorde" }
+  },
+  扎根: {
+    film: { title: "《桃姐》", meta: "许鞍华 · 2011 · 烂番茄 94%", why: "它凝视照料、衰老与日常关系里不被命名的劳动，让普通生活显出真正的重量。" },
+    book: { title: "《生活的代价》", meta: "Deborah Levy", why: "在家庭角色、写作与重新开始之间，寻找一种既能照料他人、也不放弃自己的生活。" },
+    quote: { text: "我们很少能在孤立中疗愈；疗愈是一种共同体的行动。", author: "bell hooks" }
+  },
+  点燃: {
+    film: { title: "《野马》", meta: "Deniz Gamze Ergüven · 2015 · 烂番茄 97%", why: "五个女孩在规训中彼此保护、寻找出口；它把反抗拍得有疼痛，也有真实向前的力量。" },
+    book: { title: "《局外人姐妹》", meta: "Audre Lorde", why: "关于沉默、差异、愤怒与行动的经典文集，帮助你把力量从证明自己转向改变现实。" },
+    quote: { text: "你的沉默不会保护你。", author: "Audre Lorde" }
+  },
+  超越: {
+    film: { title: "《尘与土的女儿》", meta: "Julie Dash · 1991 · 烂番茄 94%", why: "女性、祖辈记忆与尚未出生的声音跨越时间交谈，为你打开一种非线性的辽阔感。" },
+    book: { title: "《边境／边界》", meta: "Gloria Anzaldúa", why: "在语言、身份与精神边界之间创造新的栖身之处，适合不愿被单一答案定义的你。" },
+    quote: { text: "要活在边界之地，你必须不设边界，成为交汇处。", author: "Gloria Anzaldúa" }
+  }
+};
+
 const profileEnhancements: Record<Dimension, {
   image: string; connection: string; distinction: string; signals: string[];
 }> = {
@@ -193,12 +240,12 @@ export default function Home() {
     setSaving(true);
     try {
       await document.fonts.ready;
-      const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=6800;
+      const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=7800;
       const c=canvas.getContext("2d");if(!c)return;
-      const p=profiles[primary], np=profiles[nourished], ip=profiles[invited];
+      const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], rec=culturalRecommendations[primary];
       const enhancement=profileEnhancements[primary], indices=relativeIndices(scores);
       const left=120, width=840;
-      const bg=c.createLinearGradient(0,0,0,6800);bg.addColorStop(0,"#102a24");bg.addColorStop(.5,"#0b211d");bg.addColorStop(1,"#071511");c.fillStyle=bg;c.fillRect(0,0,1080,6800);
+      const bg=c.createLinearGradient(0,0,0,7800);bg.addColorStop(0,"#102a24");bg.addColorStop(.5,"#0b211d");bg.addColorStop(1,"#071511");c.fillStyle=bg;c.fillRect(0,0,1080,7800);
 
       const lines=(text:string,max:number)=>{
         const result:string[]=[];let row="";
@@ -241,6 +288,11 @@ export default function Home() {
       y+=12;c.fillStyle="rgba(198,168,102,.12)";c.fillRect(left,y,width,450);c.fillStyle="#c6a866";c.font="600 24px system-ui, sans-serif";c.fillText("给你的具体建议",left+38,y+56);
       const actionLabels=["现在 · 10 分钟","找一天 · 半天","接下来 · 四周"];
       ip.actions.forEach((action,i)=>{const yy=y+116+i*102;c.fillStyle="#91a89a";c.font="22px system-ui, sans-serif";c.fillText(actionLabels[i],left+38,yy);c.fillStyle="#f0eee4";c.font='28px "Songti SC", serif';text(action,left+245,yy,width-295,45)});y+=520;
+      y=rule(y);y=label("05  为你的内在书架留两束光",y);y=heading("一部电影，一本书",y)+28;
+      const recommendationCard=(kind:string,titleValue:string,meta:string,why:string,top:number)=>{c.fillStyle="rgba(255,255,255,.045)";c.fillRect(left,top,width,280);c.fillStyle="#c6a866";c.font="600 22px system-ui, sans-serif";c.textAlign="left";c.fillText(kind,left+38,top+50);c.fillStyle="#f0eee4";c.font='500 38px "Songti SC", serif';c.fillText(titleValue,left+38,top+105);c.fillStyle="#91a89a";c.font="21px system-ui, sans-serif";c.fillText(meta,left+38,top+148);c.fillStyle="#cdd5ca";c.font='27px "Songti SC", serif';text(why,left+38,top+202,width-76,46);return top+320};
+      y=recommendationCard("为你推荐的电影",rec.film.title,rec.film.meta,rec.film.why,y);
+      y=recommendationCard("为你推荐的书",rec.book.title,rec.book.meta,rec.book.why,y);
+      c.fillStyle="rgba(198,168,102,.11)";c.fillRect(left,y,width,250);c.fillStyle="#e5ddc4";c.font='italic 31px "Songti SC", serif';c.textAlign="center";text(`“${rec.quote.text}”`,540,y+78,width-100,52,"center");c.fillStyle="#a9b7aa";c.font="22px system-ui, sans-serif";c.fillText(`— ${rec.quote.author}`,540,y+205);y+=320;
       c.fillStyle="#789082";c.font="23px system-ui, sans-serif";c.textAlign="center";c.fillText("生命火花连接 · 愿你继续听见自己的微光",540,y);
 
       const output=document.createElement("canvas");output.width=1080;output.height=Math.ceil(y+100);const outputContext=output.getContext("2d");if(!outputContext)return;outputContext.drawImage(canvas,0,0);
@@ -263,7 +315,7 @@ export default function Home() {
     <span className="eyebrow">两股同样清晰的力量</span><h2>如果未来一个月，只能为生活重新打开一扇门，你更愿意先走向哪一种感受？</h2><div className="options">{tiedPrimary.map((dim,i)=><button key={dim} onClick={()=>choosePrimary(dim)}><em>{String.fromCharCode(65+i)}</em><span>{profiles[dim].plain}</span></button>)}</div><p className="note">这次选择只决定展开哪一条解读，不会改变你的八维生命之花。</p>
   </section></main>;
   if(stage==="loading") return <main className="full-screen loading"><Forest/><div className="glyph-ring"><span>✦</span></div><p>水脉正在汇合，岩层正在显露……</p></main>;
-  const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited];
+  const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited], recommendation=culturalRecommendations[primary];
   return <main className="result"><Forest/><section className="result-intro"><span className="eyebrow">你的生命感来源</span><h1>{p.title}</h1><p className="result-english">{p.english}</p><p className="invocation">{p.invocation}</p><p className="plain">{p.plain}</p><span className="scroll-hint">向下展开你的生命之花 ↓</span></section>
     <figure className="result-art"><img src={enhancement.image} alt={`${p.title}生命感来源插画`}/></figure>
     <section className="result-section flower"><span className="section-no">01</span><p className="eyebrow">你的八维生命之花</p><h2>八条水脉，<br/>共同流经你</h2><Radar scores={scores}/><p className="note">它呈现的是你更常使用哪些方式与世界连接，不代表能力高低。</p></section>
@@ -271,6 +323,7 @@ export default function Home() {
     <section className="result-section nourished"><Totem dim={nourished} small/><p className="eyebrow">最近，什么正在托住你</p><h2>{np.title}</h2><p>{np.nourish}</p></section>
     <section className="result-section invitation"><span className="section-no">03</span><p className="eyebrow">而此刻，生命邀请你</p><h2>{ip.title}</h2><p className="invitation-copy">{ip.now}</p><div className="signals"><b>它可能正在这样提醒你</b>{invitedEnhancement.signals.slice(0,2).map(signal=><p key={signal}>· {signal}</p>)}</div>{primary!==invited&&<p className="bridge">你长久依靠「{p.title}」获得生命感，而此刻「{ip.title}」正邀请你补回另一种呼吸。它们并不矛盾。</p>}</section>
     <section className="result-section actions"><span className="section-no">04</span><p className="eyebrow">给你的具体建议</p><h2>只选一个入口，也已经足够</h2>{ip.actions.map((a,i)=><article key={a}><span>{["现在 · 10 分钟","找一天 · 半天","接下来 · 四周"][i]}</span><p>{a}</p></article>)}</section>
+    <section className="result-section culture"><span className="section-no">05</span><p className="eyebrow">为你的内在书架留两束光</p><h2>一部电影，一本书</h2><div className="culture-grid"><article><span>为你推荐的电影</span><h3>{recommendation.film.title}</h3><small>{recommendation.film.meta}</small><p>{recommendation.film.why}</p></article><article><span>为你推荐的书</span><h3>{recommendation.book.title}</h3><small>{recommendation.book.meta}</small><p>{recommendation.book.why}</p></article></div><blockquote><p>“{recommendation.quote.text}”</p><cite>— {recommendation.quote.author}</cite></blockquote></section>
     <section className="result-section result-actions"><p>保存一份完整结果，或再听一次内心的回答。</p><button className="primary-btn" onClick={downloadCard} disabled={saving}>{saving?"正在生成完整长图…":"保存我的结果插画"}</button><button className="text-btn" onClick={restart}>重新寻找一次</button></section>
   </main>;
 }
