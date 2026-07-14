@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { dimensions, primaryCandidates, relativeIndices, scoreAnswers, type Dimension } from "./scoring";
 
 const assetPath = (path: string) =>
@@ -9,19 +9,19 @@ const assetPath = (path: string) =>
 type Stage = "home" | "intro" | "quiz" | "tie" | "loading" | "result";
 
 const profiles: Record<Dimension, {
-  title: string; totem: string; mark: string; invocation: string; plain: string;
+  title: string; english: string; totem: string; mark: string; invocation: string; plain: string;
   alive: string; attract: string; life: string; reframe: string;
   nourish: string; now: string; actions: [string, string, string]; experiences: string[];
   book: string; film: string; echo: string;
 }> = {
-  探索: { title: "采撷山海", totem: "迁徙山眼", mark: "⌁", invocation: "去往地图尚未替你命名的地方，让陌生的风景唤醒一个仍在生长的自己。", plain: "你常在未知、变化与新的经验里，确认生命仍有可能。", alive: "你常常在世界尚未被说尽的地方感到自己正在活着。陌生街道、新知识和一次偶然改变的计划，都会让好奇重新打开。", attract: "你容易被有自己世界、愿意分享新视角的人吸引，也会留意地图、地方故事和带着时间痕迹的物件。", life: "你需要持续与“还不知道”相遇。工作与兴趣中，适度的研究、试验和跨领域输入会让你保持流动。", reframe: "探索不等于善变。你的持续性，也许不在多年只做同一件事，而在长期追随同一个更深的问题。", nourish: "最近，一点陌生感正在托住你。那些新出现的入口，让熟悉生活没有完全合拢。", now: "它邀请你主动为生活增加一点陌生感，而不是等待新鲜事偶然发生。", actions: ["查一条从未走过的附近路线。", "独自漫游一个陌生街区两小时。", "完成十二次城市或自然采集。"], experiences: ["城市漫游", "随机路线骑行", "地方文化走访"], book: "《迷失指南》· Rebecca Solnit", film: "《拾穗者与我》· Agnès Varda", echo: "未知不是路线的失败，也可能是重新发现自己与世界关系的入口。" },
-  创造: { title: "万物塑形", totem: "掌心器皿", mark: "◡", invocation: "让无形的感受穿过双手，在纸、泥、木、光与语言里，长出一个可被触碰的新境。", plain: "你通过制作、表达与建构，让内在经验在世界上获得形状。", alive: "你需要让尚未成形的感受穿过双手、语言或材料，在世界上获得一个位置。创造是你确认自己认真生活过的方式。", attract: "你容易被拥有个人表达、敢于建立自己语言的人吸引，也会对工坊、器物、影像和未完成的材料感到亲近。", life: "只有输入而没有输出时，你可能完成很多工作，却觉得生活没有留下自己的痕迹。", reframe: "创造不等于必须成为艺术家。做饭、整理空间或写一封信，同样是为经验赋形。", nourish: "最近，一次表达或制作正在托住你。你留下的不只是作品，也是生活经过你的证据。", now: "它邀请你暂时离开只负责完成任务的状态，亲手做一点真正属于自己的表达。", actions: ["用手边材料完成一个微小造物。", "参加一次材料或手工体验。", "建立持续四周的个人作品计划。"], experiences: ["陶艺", "拼贴", "独立出版"], book: "《一间自己的房间》· Virginia Woolf", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "诗不是奢侈品。感受拥有形状，才可能成为新的思想与行动。" },
-  共鸣: { title: "聆听回声", totem: "双水回环", mark: "◎", invocation: "让两段不同的生命，在深处相遇而不彼此淹没。", plain: "你在真诚的互相看见中确认自己，也通过他人的故事扩展生命。", alive: "比起热闹，你更在意关系是否有回应：一句话有没有被真正听见，一段沉默能否被共同承接。", attract: "你容易被诚实、有内在层次、愿意倾听也愿意袒露的人吸引。你需要的是差异可以安全地被说出。", life: "关系并非生活的附属，而是你认识世界的重要路径。深谈、书信、电影人物与共同创作都可能点亮你。", reframe: "共鸣不是讨好。真正的回环是双方都能进入，也都能离开；你同样值得被认真回应。", nourish: "最近，一段真实回应正在托住你。有人听见了你，而你也短暂进入了另一段生命。", now: "它邀请你减少礼貌却空泛的联系，和一个值得信任的人交换真正的近况。", actions: ["发出一句不止于近况的问候。", "进行一次不被手机打断的长谈。", "发起双人书信或共同记录。"], experiences: ["深度访谈", "双人散步", "小型读书会"], book: "《爱的艺术》· bell hooks", film: "《二十世纪女人》· Mike Mills", echo: "爱不只是一种感觉，也是一种关怀、责任与共同实践。" },
-  理解: { title: "寻迹问源", totem: "地层星图", mark: "⋰", invocation: "从具体痕迹出发，沿时间与因果向上追问，直到零散经验显露它的星图。", plain: "你通过辨认规律、组织经验和追问，让复杂世界重新产生脉络。", alive: "你习惯沿着细小痕迹继续追问：一件事为何发生，一个人如何成为今天的样子。理解让生活重新显露脉络。", attract: "你容易被思想有纵深、能够提出好问题的人吸引，也对历史、心理、文化和事物的来处保持兴趣。", life: "阅读、研究、记录、电影与深谈都会成为线索。问题真正吸引你时，你可以长时间保持注意力。", reframe: "理解不等于站在生命之外分析一切。完整的理解，也允许身体和情绪提供尚未被命名的信息。", nourish: "最近，一条线索正在托住你。某些零散经验重新彼此靠近，让生活恢复了可理解的形状。", now: "它邀请你从不断接收信息，转向认真弄明白一个真正吸引你的问题。", actions: ["写下一个反复出现的问题。", "查阅三份可靠资料并做笔记。", "完成一次主题阅读与个人研究。"], experiences: ["地方史走访", "主题阅读", "纪录片讨论"], book: "《小说的提袋理论》· Ursula K. Le Guin", film: "《拾穗者与我》· Agnès Varda", echo: "故事不必只围绕英雄与征服；采集、承载与照料也能组织经验。" },
-  感知: { title: "感知微光", totem: "露水叶瞳", mark: "◉", invocation: "把身体重新交给风、雨、气味与四季，让尚未被语言惊动的生命进入怀中。", plain: "身体、自然与审美细节，是你直接接收世界的入口。", alive: "世界常从细微处进入你：叶面的水光、雨后的气味、布料的质地和一句话里几乎听不见的停顿。", attract: "你容易被自然、光影、植物、声音、食物和细致空间吸引，也会靠近尊重身体感受的人。", life: "当感官被温柔安放，生命会重新具体；当噪声与任务长期占据注意力，你也更容易过载。", reframe: "敏感不是软弱。高分辨率的感知需要边界、休息和选择权。", nourish: "最近，一些细微感受正在托住你。光、气味、声音或身体，让日子不只剩下任务。", now: "它邀请你暂时离开持续思考和看屏幕的状态，重新用身体感受周围。", actions: ["闭眼辨认三种声音与触感。", "去水边或市场慢走半天。", "建立四周季节感官档案。"], experiences: ["植物观察", "声音采集", "季节料理"], book: "《Devotions》· Mary Oliver", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "世界把自己交给你的想象，也一遍遍召唤你在万物中的位置。" },
-  扎根: { title: "耕耘守护", totem: "年轮根庭", mark: "⌾", invocation: "让重复、照料与耐心沉入根系；漫长时光会在看不见的地方，为生命积蓄重量。", plain: "重复、照料与长期关系，为你建立可以依靠的生命节律。", alive: "熟悉的饭菜、固定散步、缓慢熟练的手艺和经得起年月的关系，会让生活从应付变成可以居住的地方。", attract: "你容易被可靠、耐心、有生活感的人吸引，也喜欢旧物、植物、家常仪式与带有使用痕迹的器物。", life: "你擅长维系、整理、保存和承托。真正重要的事，常在时间中逐渐长出重量。", reframe: "扎根不是保守，更不是必须替所有人维持生活。稳定也应承托你的生长。", nourish: "最近，一段稳定节律正在托住你。那些看似普通的重复，正在替生活保存重量。", now: "它邀请你减少一点临时应付，重新建立一件可以重复、可以依靠的小事。", actions: ["整理并照料一个日常角落。", "认真做一顿需要耐心的饭。", "恢复一项每周固定的小仪式。"], experiences: ["园艺", "旧物修补", "传统手艺"], book: "《编织甜草》· Robin Wall Kimmerer", film: "《伯德小姐》· Greta Gerwig", echo: "根系不是为了把你困住，而是让你有力量经历季节、伸向更远处。" },
-  点燃: { title: "踏火破界", totem: "裂石火种", mark: "◇", invocation: "让火种沿裂隙生长，为停滞之处打开新的生命通道。", plain: "行动、挑战与越过困难，让你的意志和身体重新汇合。", alive: "一个决定落地、身体越过原先的极限、长期停滞的事情终于被推动，会让你确认自己能够对现实产生作用。", attract: "你容易被勇敢、直接、有行动力和坚定边界的人吸引，也会欣赏不等待完美条件的人。", life: "你需要现场感与真正发生的动作。工作中，一定的决策空间和可见结果会让你更有生命力。", reframe: "点燃不等于永远强大或竞争。停止、拒绝和离开，也可能是最诚实的行动。", nourish: "最近，一次真实行动正在托住你。事情开始发生，你也重新感到自己可以影响现实。", now: "它邀请你停止等待完全准备好，先完成第一个可以验证的动作。", actions: ["完成拖延事项的第一个十五分钟。", "尝试一次让身体发热的新活动。", "为一个真实目标建立四周挑战。"], experiences: ["攀岩", "即兴戏剧", "力量训练"], book: "《局外人姐妹》· Audre Lorde", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "沉默不会保护你。心仍在发抖时，也可以让脚诚实地向前。" },
-  超越: { title: "凝望无垠", totem: "星环天门", mark: "◌", invocation: "在星河、古老时间与万物秩序前放下答案，让有限的自我被更辽阔的存在环抱。", plain: "你需要让生命不只停留在眼前的效率与得失。", alive: "星空、古老建筑、历史、神话、自然整体和仪式，会让有限的自我重新找到位置，恢复生活的纵深。", attract: "你容易被有精神纵深、敬畏感和历史意识的人吸引，也会留意古老符号、宇宙与自然奇观。", life: "你需要感到正在回应比短期回报更大的价值；不可穷尽之物不一定给你答案，却会重新排列焦虑。", reframe: "超越不是逃避现实。真正的无垠并不取消有限，而是让具体生活被更温柔地看见。", nourish: "最近，一种更辽阔的尺度正在托住你。它没有替你回答问题，却让问题不再只有眼前大小。", now: "它邀请你暂时离开效率和结果，接触一件能让自己安静或感到敬畏的事。", actions: ["安静看十分钟天空或水面。", "走进旧建筑或自然深处半天。", "建立四周观星或私人仪式。"], experiences: ["天文观察", "古迹行走", "自然静默"], book: "《编织甜草》· Robin Wall Kimmerer", film: "《瞬息全宇宙》· Daniels", echo: "有些问题不需要被解开。它们存在，是为了让生命知道自己并不孤立。" }
+  探索: { title: "采撷山海", english: "Gather the Horizons", totem: "迁徙山眼", mark: "⌁", invocation: "去往地图尚未替你命名的地方，让陌生的风景唤醒一个仍在生长的自己。", plain: "你常在未知、变化与新的经验里，确认生命仍有可能。", alive: "你常常在世界尚未被说尽的地方感到自己正在活着。陌生街道、新知识和一次偶然改变的计划，都会让好奇重新打开。", attract: "你容易被有自己世界、愿意分享新视角的人吸引，也会留意地图、地方故事和带着时间痕迹的物件。", life: "你需要持续与“还不知道”相遇。工作与兴趣中，适度的研究、试验和跨领域输入会让你保持流动。", reframe: "探索不等于善变。你的持续性，也许不在多年只做同一件事，而在长期追随同一个更深的问题。", nourish: "最近，一点陌生感正在托住你。那些新出现的入口，让熟悉生活没有完全合拢。", now: "它邀请你主动为生活增加一点陌生感，而不是等待新鲜事偶然发生。", actions: ["查一条从未走过的附近路线。", "独自漫游一个陌生街区两小时。", "完成十二次城市或自然采集。"], experiences: ["城市漫游", "随机路线骑行", "地方文化走访"], book: "《迷失指南》· Rebecca Solnit", film: "《拾穗者与我》· Agnès Varda", echo: "未知不是路线的失败，也可能是重新发现自己与世界关系的入口。" },
+  创造: { title: "万物塑形", english: "Shape the Unseen", totem: "掌心器皿", mark: "◡", invocation: "让无形的感受穿过双手，在纸、泥、木、光与语言里，长出一个可被触碰的新境。", plain: "你通过制作、表达与建构，让内在经验在世界上获得形状。", alive: "你需要让尚未成形的感受穿过双手、语言或材料，在世界上获得一个位置。创造是你确认自己认真生活过的方式。", attract: "你容易被拥有个人表达、敢于建立自己语言的人吸引，也会对工坊、器物、影像和未完成的材料感到亲近。", life: "只有输入而没有输出时，你可能完成很多工作，却觉得生活没有留下自己的痕迹。", reframe: "创造不等于必须成为艺术家。做饭、整理空间或写一封信，同样是为经验赋形。", nourish: "最近，一次表达或制作正在托住你。你留下的不只是作品，也是生活经过你的证据。", now: "它邀请你暂时离开只负责完成任务的状态，亲手做一点真正属于自己的表达。", actions: ["用手边材料完成一个微小造物。", "参加一次材料或手工体验。", "建立持续四周的个人作品计划。"], experiences: ["陶艺", "拼贴", "独立出版"], book: "《一间自己的房间》· Virginia Woolf", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "诗不是奢侈品。感受拥有形状，才可能成为新的思想与行动。" },
+  共鸣: { title: "聆听回声", english: "Listen for the Echo", totem: "双水回环", mark: "◎", invocation: "让两段不同的生命，在深处相遇而不彼此淹没。", plain: "你在真诚的互相看见中确认自己，也通过他人的故事扩展生命。", alive: "比起热闹，你更在意关系是否有回应：一句话有没有被真正听见，一段沉默能否被共同承接。", attract: "你容易被诚实、有内在层次、愿意倾听也愿意袒露的人吸引。你需要的是差异可以安全地被说出。", life: "关系并非生活的附属，而是你认识世界的重要路径。深谈、书信、电影人物与共同创作都可能点亮你。", reframe: "共鸣不是讨好。真正的回环是双方都能进入，也都能离开；你同样值得被认真回应。", nourish: "最近，一段真实回应正在托住你。有人听见了你，而你也短暂进入了另一段生命。", now: "它邀请你减少礼貌却空泛的联系，和一个值得信任的人交换真正的近况。", actions: ["发出一句不止于近况的问候。", "进行一次不被手机打断的长谈。", "发起双人书信或共同记录。"], experiences: ["深度访谈", "双人散步", "小型读书会"], book: "《爱的艺术》· bell hooks", film: "《二十世纪女人》· Mike Mills", echo: "爱不只是一种感觉，也是一种关怀、责任与共同实践。" },
+  理解: { title: "寻迹问源", english: "Trace the Origins", totem: "地层星图", mark: "⋰", invocation: "从具体痕迹出发，沿时间与因果向上追问，直到零散经验显露它的星图。", plain: "你通过辨认规律、组织经验和追问，让复杂世界重新产生脉络。", alive: "你习惯沿着细小痕迹继续追问：一件事为何发生，一个人如何成为今天的样子。理解让生活重新显露脉络。", attract: "你容易被思想有纵深、能够提出好问题的人吸引，也对历史、心理、文化和事物的来处保持兴趣。", life: "阅读、研究、记录、电影与深谈都会成为线索。问题真正吸引你时，你可以长时间保持注意力。", reframe: "理解不等于站在生命之外分析一切。完整的理解，也允许身体和情绪提供尚未被命名的信息。", nourish: "最近，一条线索正在托住你。某些零散经验重新彼此靠近，让生活恢复了可理解的形状。", now: "它邀请你从不断接收信息，转向认真弄明白一个真正吸引你的问题。", actions: ["写下一个反复出现的问题。", "查阅三份可靠资料并做笔记。", "完成一次主题阅读与个人研究。"], experiences: ["地方史走访", "主题阅读", "纪录片讨论"], book: "《小说的提袋理论》· Ursula K. Le Guin", film: "《拾穗者与我》· Agnès Varda", echo: "故事不必只围绕英雄与征服；采集、承载与照料也能组织经验。" },
+  感知: { title: "感知微光", english: "Sense the Glimmer", totem: "露水叶瞳", mark: "◉", invocation: "把身体重新交给风、雨、气味与四季，让尚未被语言惊动的生命进入怀中。", plain: "身体、自然与审美细节，是你直接接收世界的入口。", alive: "世界常从细微处进入你：叶面的水光、雨后的气味、布料的质地和一句话里几乎听不见的停顿。", attract: "你容易被自然、光影、植物、声音、食物和细致空间吸引，也会靠近尊重身体感受的人。", life: "当感官被温柔安放，生命会重新具体；当噪声与任务长期占据注意力，你也更容易过载。", reframe: "敏感不是软弱。高分辨率的感知需要边界、休息和选择权。", nourish: "最近，一些细微感受正在托住你。光、气味、声音或身体，让日子不只剩下任务。", now: "它邀请你暂时离开持续思考和看屏幕的状态，重新用身体感受周围。", actions: ["闭眼辨认三种声音与触感。", "去水边或市场慢走半天。", "建立四周季节感官档案。"], experiences: ["植物观察", "声音采集", "季节料理"], book: "《Devotions》· Mary Oliver", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "世界把自己交给你的想象，也一遍遍召唤你在万物中的位置。" },
+  扎根: { title: "耕耘守护", english: "Root into Care", totem: "年轮根庭", mark: "⌾", invocation: "让重复、照料与耐心沉入根系；漫长时光会在看不见的地方，为生命积蓄重量。", plain: "重复、照料与长期关系，为你建立可以依靠的生命节律。", alive: "熟悉的饭菜、固定散步、缓慢熟练的手艺和经得起年月的关系，会让生活从应付变成可以居住的地方。", attract: "你容易被可靠、耐心、有生活感的人吸引，也喜欢旧物、植物、家常仪式与带有使用痕迹的器物。", life: "你擅长维系、整理、保存和承托。真正重要的事，常在时间中逐渐长出重量。", reframe: "扎根不是保守，更不是必须替所有人维持生活。稳定也应承托你的生长。", nourish: "最近，一段稳定节律正在托住你。那些看似普通的重复，正在替生活保存重量。", now: "它邀请你减少一点临时应付，重新建立一件可以重复、可以依靠的小事。", actions: ["整理并照料一个日常角落。", "认真做一顿需要耐心的饭。", "恢复一项每周固定的小仪式。"], experiences: ["园艺", "旧物修补", "传统手艺"], book: "《编织甜草》· Robin Wall Kimmerer", film: "《伯德小姐》· Greta Gerwig", echo: "根系不是为了把你困住，而是让你有力量经历季节、伸向更远处。" },
+  点燃: { title: "踏火破界", english: "Ignite the Threshold", totem: "裂石火种", mark: "◇", invocation: "让火种沿裂隙生长，为停滞之处打开新的生命通道。", plain: "行动、挑战与越过困难，让你的意志和身体重新汇合。", alive: "一个决定落地、身体越过原先的极限、长期停滞的事情终于被推动，会让你确认自己能够对现实产生作用。", attract: "你容易被勇敢、直接、有行动力和坚定边界的人吸引，也会欣赏不等待完美条件的人。", life: "你需要现场感与真正发生的动作。工作中，一定的决策空间和可见结果会让你更有生命力。", reframe: "点燃不等于永远强大或竞争。停止、拒绝和离开，也可能是最诚实的行动。", nourish: "最近，一次真实行动正在托住你。事情开始发生，你也重新感到自己可以影响现实。", now: "它邀请你停止等待完全准备好，先完成第一个可以验证的动作。", actions: ["完成拖延事项的第一个十五分钟。", "尝试一次让身体发热的新活动。", "为一个真实目标建立四周挑战。"], experiences: ["攀岩", "即兴戏剧", "力量训练"], book: "《局外人姐妹》· Audre Lorde", film: "《燃烧女子的肖像》· Céline Sciamma", echo: "沉默不会保护你。心仍在发抖时，也可以让脚诚实地向前。" },
+  超越: { title: "凝望无垠", english: "Gaze into the Vast", totem: "星环天门", mark: "◌", invocation: "在星河、古老时间与万物秩序前放下答案，让有限的自我被更辽阔的存在环抱。", plain: "你需要让生命不只停留在眼前的效率与得失。", alive: "星空、古老建筑、历史、神话、自然整体和仪式，会让有限的自我重新找到位置，恢复生活的纵深。", attract: "你容易被有精神纵深、敬畏感和历史意识的人吸引，也会留意古老符号、宇宙与自然奇观。", life: "你需要感到正在回应比短期回报更大的价值；不可穷尽之物不一定给你答案，却会重新排列焦虑。", reframe: "超越不是逃避现实。真正的无垠并不取消有限，而是让具体生活被更温柔地看见。", nourish: "最近，一种更辽阔的尺度正在托住你。它没有替你回答问题，却让问题不再只有眼前大小。", now: "它邀请你暂时离开效率和结果，接触一件能让自己安静或感到敬畏的事。", actions: ["安静看十分钟天空或水面。", "走进旧建筑或自然深处半天。", "建立四周观星或私人仪式。"], experiences: ["天文观察", "古迹行走", "自然静默"], book: "《编织甜草》· Robin Wall Kimmerer", film: "《瞬息全宇宙》· Daniels", echo: "有些问题不需要被解开。它们存在，是为了让生命知道自己并不孤立。" }
 };
 
 const profileEnhancements: Record<Dimension, {
@@ -162,7 +162,7 @@ export default function Home() {
   const [nourished, setNourished] = useState<Dimension>("探索");
   const [invited, setInvited] = useState<Dimension>("扎根");
   const [selectedPrimary, setSelectedPrimary] = useState<Dimension | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
+  const [saving, setSaving] = useState(false);
 
   const scores = useMemo(() => {
     return scoreAnswers(answers, questions);
@@ -190,16 +190,64 @@ export default function Home() {
   function choosePrimary(dim: Dimension){setSelectedPrimary(dim);beginLoading();}
   function restart(){setStage("intro");setQ(0);setAnswers([]);setStateStep("main");setSelectedPrimary(null);window.scrollTo({top:0,behavior:"smooth"});}
   async function downloadCard(){
-    const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=1440;const c=canvas.getContext("2d");if(!c)return;
-    const p=profiles[primary], enhancement=profileEnhancements[primary];
-    const artwork=new Image();artwork.src=enhancement.image;await artwork.decode();
-    const scale=Math.max(1080/artwork.width,1440/artwork.height);const w=artwork.width*scale,h=artwork.height*scale;c.drawImage(artwork,(1080-w)/2,(1440-h)/2,w,h);
-    const shade=c.createLinearGradient(0,0,0,1440);shade.addColorStop(0,"rgba(4,16,13,.18)");shade.addColorStop(.52,"rgba(4,16,13,.08)");shade.addColorStop(1,"rgba(4,16,13,.92)");c.fillStyle=shade;c.fillRect(0,0,1080,1440);
-    c.textAlign="center";c.fillStyle="#ead9a0";c.font="30px serif";c.fillText("你的生命感来源",540,92);c.fillStyle="#fffdf2";c.font="bold 86px serif";c.fillText(p.title,540,1180);
-    c.fillStyle="#eef1e7";c.font="30px serif";wrap(c,p.plain,540,1250,850,46);c.fillStyle="#c7d5ca";c.font="24px sans-serif";c.fillText(`此刻的生命邀请 · ${profiles[invited].title}`,540,1380);
-    const a=document.createElement("a");a.download=`生命石片-${p.title}.png`;a.href=canvas.toDataURL("image/png");a.click();
+    setSaving(true);
+    try {
+      await document.fonts.ready;
+      const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=6800;
+      const c=canvas.getContext("2d");if(!c)return;
+      const p=profiles[primary], np=profiles[nourished], ip=profiles[invited];
+      const enhancement=profileEnhancements[primary], indices=relativeIndices(scores);
+      const left=120, width=840;
+      const bg=c.createLinearGradient(0,0,0,6800);bg.addColorStop(0,"#102a24");bg.addColorStop(.5,"#0b211d");bg.addColorStop(1,"#071511");c.fillStyle=bg;c.fillRect(0,0,1080,6800);
+
+      const lines=(text:string,max:number)=>{
+        const result:string[]=[];let row="";
+        for(const ch of text){if(row&&c.measureText(row+ch).width>max){result.push(row);row=ch}else row+=ch}
+        if(row)result.push(row);
+        if(result.length>1&&result[result.length-1].length===1){const previous=result[result.length-2];result[result.length-1]=previous.slice(-1)+result[result.length-1];result[result.length-2]=previous.slice(0,-1)}
+        return result;
+      };
+      const text=(value:string,x:number,y:number,max:number,lineHeight:number,align:CanvasTextAlign="left")=>{c.textAlign=align;for(const row of lines(value,max)){c.fillText(row,x,y);y+=lineHeight}return y};
+      const label=(value:string,y:number)=>{c.fillStyle="#c6a866";c.font='600 24px system-ui, sans-serif';c.letterSpacing="4px";c.textAlign="left";c.fillText(value,left,y);c.letterSpacing="0px";return y+58};
+      const heading=(value:string,y:number)=>{c.fillStyle="#f0eee2";c.font='500 48px "Songti SC", serif';return text(value,left,y,width,68)};
+      const paragraph=(value:string,y:number,color:"#cdd5ca"|"#9eb2a5"="#cdd5ca")=>{c.fillStyle=color;c.font='30px "Songti SC", serif';return text(value,left,y,width,53)+26};
+      const rule=(y:number)=>{c.fillStyle="rgba(198,168,102,.22)";c.fillRect(left,y,width,2);return y+66};
+      let y=110;
+      c.textAlign="center";c.fillStyle="#c6a866";c.font="600 24px system-ui, sans-serif";c.fillText("生命火花连接 · 你的生命感来源",540,y);y+=92;
+      c.fillStyle="#f5f1df";c.font='500 92px "Songti SC", serif';c.fillText(p.title,540,y);y+=56;
+      c.fillStyle="#c9b77f";c.font="italic 31px Georgia, serif";c.fillText(p.english,540,y);y+=88;
+      c.fillStyle="#e0e3d9";c.font='34px "Songti SC", serif';y=text(p.invocation,540,y,780,58,"center")+30;
+      c.fillStyle="#9eb2a5";c.font="27px system-ui, sans-serif";y=text(p.plain,540,y,780,48,"center")+70;
+
+      const artwork=new Image();artwork.src=enhancement.image;await artwork.decode();
+      const artHeight=780, scale=Math.max(width/artwork.width,artHeight/artwork.height), w=artwork.width*scale,h=artwork.height*scale;
+      c.save();c.beginPath();c.roundRect(left,y,width,artHeight,26);c.clip();c.drawImage(artwork,left+(width-w)/2,y+(artHeight-h)/2,w,h);const shade=c.createLinearGradient(0,y,0,y+artHeight);shade.addColorStop(0,"rgba(5,18,14,.02)");shade.addColorStop(1,"rgba(5,18,14,.32)");c.fillStyle=shade;c.fillRect(left,y,width,artHeight);c.restore();y+=artHeight+90;
+
+      y=label("01  你的八维生命之花",y);y=heading("八条水脉，共同流经你",y)+28;
+      c.font="25px system-ui, sans-serif";
+      dimensions.forEach((dim,i)=>{const col=i%2,row=Math.floor(i/2),x=left+col*430,yy=y+row*76;c.fillStyle="#d9dfd5";c.textAlign="left";c.fillText(dim,x,yy);c.fillStyle="rgba(255,255,255,.1)";c.fillRect(x+75,yy-16,280,8);c.fillStyle="#c6a866";c.fillRect(x+75,yy-16,280*indices[dim]/100,8);c.textAlign="right";c.fillText(String(indices[dim]),x+400,yy)});y+=350;
+      c.fillStyle="#789082";c.font="23px system-ui, sans-serif";y=text("它呈现的是你更常使用哪些方式与世界连接，不代表能力高低。",left,y,width,42)+45;y=rule(y);
+
+      y=label(`02  ${p.title} · 生命连接解读`,y);y=heading("你通常如何与世界连接",y)+18;y=paragraph(enhancement.connection,y);
+      c.fillStyle="rgba(57,125,120,.20)";c.fillRect(left,y,width,230);c.fillStyle="#c6a866";c.font="600 24px system-ui, sans-serif";c.textAlign="left";c.fillText("这意味着什么？",left+38,y+52);c.fillStyle="#e2e5db";c.font='28px "Songti SC", serif';text(enhancement.distinction,left+38,y+105,width-76,48);y+=282;
+      c.fillStyle="#d9c998";c.font='500 34px "Songti SC", serif';c.fillText("你如何被点亮",left,y);y+=52;y=paragraph(p.alive,y);
+      c.fillStyle="#d9c998";c.font='500 34px "Songti SC", serif';c.fillText("什么总会吸引你",left,y);y+=52;y=paragraph(p.attract,y);
+      c.fillStyle="#d9c998";c.font='500 34px "Songti SC", serif';c.fillText("它如何进入生活",left,y);y+=52;y=paragraph(p.life,y);
+      c.fillStyle="rgba(198,168,102,.10)";c.fillRect(left,y,width,190);c.fillStyle="#c6a866";c.font="600 22px system-ui, sans-serif";c.fillText("请别误解这一部分自己",left+38,y+48);c.fillStyle="#e0e2d8";c.font='28px "Songti SC", serif';text(p.reframe,left+38,y+100,width-76,48);y+=245;y=rule(y);
+
+      y=label("最近，什么正在托住你",y);y=heading(np.title,y)+8;y=paragraph(np.nourish,y);y=rule(y);
+      y=label("03  而此刻，生命邀请你",y);y=heading(ip.title,y)+8;y=paragraph(ip.now,y);
+      if(primary!==invited)y=paragraph(`你长久依靠「${p.title}」获得生命感，而此刻「${ip.title}」正邀请你补回另一种呼吸。它们并不矛盾。`,y,"#9eb2a5");
+      y+=12;c.fillStyle="rgba(198,168,102,.12)";c.fillRect(left,y,width,450);c.fillStyle="#c6a866";c.font="600 24px system-ui, sans-serif";c.fillText("给你的具体建议",left+38,y+56);
+      const actionLabels=["现在 · 10 分钟","找一天 · 半天","接下来 · 四周"];
+      ip.actions.forEach((action,i)=>{const yy=y+116+i*102;c.fillStyle="#91a89a";c.font="22px system-ui, sans-serif";c.fillText(actionLabels[i],left+38,yy);c.fillStyle="#f0eee4";c.font='28px "Songti SC", serif';text(action,left+245,yy,width-295,45)});y+=520;
+      c.fillStyle="#789082";c.font="23px system-ui, sans-serif";c.textAlign="center";c.fillText("生命火花连接 · 愿你继续听见自己的微光",540,y);
+
+      const output=document.createElement("canvas");output.width=1080;output.height=Math.ceil(y+100);const outputContext=output.getContext("2d");if(!outputContext)return;outputContext.drawImage(canvas,0,0);
+      const blob=await new Promise<Blob|null>(resolve=>output.toBlob(resolve,"image/png"));if(!blob)return;
+      const url=URL.createObjectURL(blob),a=document.createElement("a");a.download=`生命火花连接-${p.title}-完整结果.png`;a.href=url;a.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+    } finally { setSaving(false); }
   }
-  function wrap(c:CanvasRenderingContext2D,text:string,x:number,y:number,max:number,line:number){let row="",yy=y;for(const ch of text){if(c.measureText(row+ch).width>max){c.fillText(row,x,yy);row=ch;yy+=line}else row+=ch}if(row)c.fillText(row,x,yy)}
 
   if(stage==="home") return <main className="full-screen hero"><Forest/><div className="hero-content"><span className="eyebrow">A LIFE CONNECTION JOURNEY</span><h1>生命火花<br/>连接</h1><p>你靠什么，确认自己正在活着？</p><button onClick={()=>setStage("intro")} className="primary-btn">沿着微光进入</button><small>约 3 分钟 · 没有标准答案</small></div><div className="stone"><span>✦</span></div></main>;
   if(stage==="intro") return <main className="full-screen intro"><Forest/><section className="paper"><span className="eyebrow">开始以前</span><h2>这里没有<br/>更好的答案</h2><p>每一道题都像一扇通向不同生活的门。请选择此刻最自然、最接近你的那一扇，而不是你认为更正确、更理想的答案。</p><blockquote>这是一场自我探索体验，不是心理诊断。结果描述的是相对倾向，并不定义你的全部。</blockquote><button onClick={()=>setStage("quiz")} className="primary-btn">开始寻找</button></section></main>;
@@ -216,14 +264,14 @@ export default function Home() {
   </section></main>;
   if(stage==="loading") return <main className="full-screen loading"><Forest/><div className="glyph-ring"><span>✦</span></div><p>水脉正在汇合，岩层正在显露……</p></main>;
   const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited];
-  return <main className="result" ref={resultRef}><Forest/><section className="result-hero illustrated"><img src={enhancement.image} alt={`${p.title}生命感来源插画`}/><div className="art-shade"/><div className="result-title"><span className="eyebrow">你的生命感来源</span><h1>{p.title}</h1><p className="invocation">{p.invocation}</p><p className="plain">{p.plain}</p><span className="scroll-hint">向下展开你的生命之花 ↓</span></div></section>
+  return <main className="result"><Forest/><section className="result-intro"><span className="eyebrow">你的生命感来源</span><h1>{p.title}</h1><p className="result-english">{p.english}</p><p className="invocation">{p.invocation}</p><p className="plain">{p.plain}</p><span className="scroll-hint">向下展开你的生命之花 ↓</span></section>
+    <figure className="result-art"><img src={enhancement.image} alt={`${p.title}生命感来源插画`}/></figure>
     <section className="result-section flower"><span className="section-no">01</span><p className="eyebrow">你的八维生命之花</p><h2>八条水脉，<br/>共同流经你</h2><Radar scores={scores}/><p className="note">它呈现的是你更常使用哪些方式与世界连接，不代表能力高低。</p></section>
     <section className="result-section reading"><span className="section-no">02</span><p className="eyebrow">{p.title} · 生命连接解读</p><h2>你通常如何<br/>与世界连接</h2><p className="lead-copy">{enhancement.connection}</p><div className="definition"><b>这意味着什么？</b><p>{enhancement.distinction}</p></div><h3>你如何被点亮</h3><p>{p.alive}</p><h3>什么总会吸引你</h3><p>{p.attract}</p><h3>它如何进入生活</h3><p>{p.life}</p><div className="reframe"><span>请别误解这一部分自己</span><p>{p.reframe}</p></div></section>
     <section className="result-section nourished"><Totem dim={nourished} small/><p className="eyebrow">最近，什么正在托住你</p><h2>{np.title}</h2><p>{np.nourish}</p></section>
-    <section className="result-section invitation"><span className="section-no">03</span><p className="eyebrow">而此刻，生命邀请你</p><h2>{ip.title}</h2><p className="invitation-copy">{ip.now}</p><div className="signals"><b>它可能正在以这些方式提醒你</b>{invitedEnhancement.signals.map(signal=><p key={signal}>· {signal}</p>)}</div><p className="this-week"><b>这周可以先做：</b>{ip.actions[1]}</p>{primary!==invited&&<p className="bridge">你长久依靠「{p.title}」获得生命感，而此刻「{ip.title}」正邀请你补回另一种呼吸。它们并不矛盾。</p>}</section>
-    <section className="result-section actions"><span className="section-no">04</span><p className="eyebrow">点亮它的三种方式</p><h2>只选一个入口，<br/>也已经足够</h2>{ip.actions.map((a,i)=><article key={a}><span>{["一次呼吸 · 10 分钟","一次靠近 · 半天","一次生长 · 四周"][i]}</span><p>{a}</p></article>)}</section>
-    <section className="result-section recommendations"><span className="section-no">05</span><p className="eyebrow">继续与世界相遇</p><h2>为你留下的<br/>三条小径</h2><div className="chips">{ip.experiences.map(x=><span key={x}>{x}</span>)}</div><article><small>一本可以陪你走一段的书</small><h3>{p.book}</h3></article><article><small>一部通向另一种生活的电影</small><h3>{p.film}</h3></article><blockquote>“{p.echo}”</blockquote></section>
-    <section className="result-section stone-card illustrated-card"><img src={enhancement.image} alt=""/><div className="card-shade"/><div className="card-content"><span className="eyebrow">你的生命感来源</span><h2>{p.title}</h2><p>{p.invocation}</p><small>此刻的生命邀请 · {ip.title}</small><button className="primary-btn" onClick={downloadCard}>保存我的结果插画</button><button className="text-btn" onClick={restart}>重新寻找一次</button></div></section>
+    <section className="result-section invitation"><span className="section-no">03</span><p className="eyebrow">而此刻，生命邀请你</p><h2>{ip.title}</h2><p className="invitation-copy">{ip.now}</p><div className="signals"><b>它可能正在这样提醒你</b>{invitedEnhancement.signals.slice(0,2).map(signal=><p key={signal}>· {signal}</p>)}</div>{primary!==invited&&<p className="bridge">你长久依靠「{p.title}」获得生命感，而此刻「{ip.title}」正邀请你补回另一种呼吸。它们并不矛盾。</p>}</section>
+    <section className="result-section actions"><span className="section-no">04</span><p className="eyebrow">给你的具体建议</p><h2>只选一个入口，也已经足够</h2>{ip.actions.map((a,i)=><article key={a}><span>{["现在 · 10 分钟","找一天 · 半天","接下来 · 四周"][i]}</span><p>{a}</p></article>)}</section>
+    <section className="result-section result-actions"><p>保存一份完整结果，或再听一次内心的回答。</p><button className="primary-btn" onClick={downloadCard} disabled={saving}>{saving?"正在生成完整长图…":"保存我的结果插画"}</button><button className="text-btn" onClick={restart}>重新寻找一次</button></section>
   </main>;
 }
 
