@@ -283,7 +283,7 @@ export default function Home() {
       await document.fonts.ready;
       const canvas=document.createElement("canvas");canvas.width=1080;canvas.height=7800;
       const c=canvas.getContext("2d");if(!c)return;
-      const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], rec=culturalRecommendations[primary];
+      const p=profiles[primary], ip=profiles[invited], rec=culturalRecommendations[primary];
       const enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited], indices=relativeIndices(scores);
       const left=120, width=840;
       const bg=c.createLinearGradient(0,0,0,7800);bg.addColorStop(0,"#102a24");bg.addColorStop(.5,"#0b211d");bg.addColorStop(1,"#071511");c.fillStyle=bg;c.fillRect(0,0,1080,7800);
@@ -323,7 +323,6 @@ export default function Home() {
       c.fillStyle="#d9c998";c.font='500 34px "Songti SC", serif';c.fillText("它如何进入生活",left,y);y+=52;y=paragraph(p.life,y);
       c.fillStyle="rgba(198,168,102,.10)";c.fillRect(left,y,width,190);c.fillStyle="#c6a866";c.font="600 22px system-ui, sans-serif";c.fillText("请别误解这一部分自己",left+38,y+48);c.fillStyle="#e0e2d8";c.font='28px "Songti SC", serif';text(p.reframe,left+38,y+100,width-76,48);y+=245;y=rule(y);
 
-      y=label("最近，什么正在托住你",y);y=heading(np.title,y)+8;y=paragraph(np.nourish,y);y=rule(y);
       y=label("03  而此刻，生命邀请你",y);y=heading(ip.title,y)+8;y=paragraph(ip.now,y);
       c.fillStyle="rgba(57,125,120,.16)";c.fillRect(left,y,width,270);c.fillStyle="#c6a866";c.font="600 22px system-ui, sans-serif";c.textAlign="left";c.fillText("它可能正在这样提醒你",left+38,y+50);
       c.fillStyle="#cdd5ca";c.font='27px "Songti SC", serif';invitedEnhancement.signals.forEach((signal,index)=>text(`· ${signal}`,left+38,y+105+index*52,width-76,44));y+=315;
@@ -355,22 +354,22 @@ export default function Home() {
     const isState=q>=8; const title=q===8?"近期正在滋养你的连接":"近期正在缺席的连接";
     const prompt=q===8?"回想最近四周，哪一种时刻最常让你重新感觉“我正在生活”？":"如果接下来的一个月仍然如此，你最想先为生活补回什么？";
     const groupOptions=q===8?stateGroups:missingGroups, subOptions=q===8?stateSubOptions:missingSubOptions;
-    const progress=Math.round(((q+1)/10)*100);
-    return <main className="quiz-shell"><Forest/><header><span>探索进度 · {progress}%</span><div className="progress"><i style={{width:`${progress}%`}}/></div></header><section className="question-card">
+    const isFinalStep=q===9;
+    const progress=isFinalStep?96:Math.round(((q+1)/10)*100);
+    return <main className="quiz-shell"><Forest/><header><span>{isFinalStep?"最后一瞥":`探索进度 · ${progress}%`}</span><div className="progress"><i style={{width:`${progress}%`}}/></div></header><section className="question-card">
       {!isState ? <><span className="eyebrow">{questions[q].title}</span><h2>{questions[q].prompt}</h2><div className="options">{questions[q].options.map((o,i)=><button className={selectedOption===i?"selected":""} key={i} onClick={()=>chooseTendency(i)}><em>{String.fromCharCode(65+i)}</em><span>{o.text}</span></button>)}</div></>:
       <><span className="eyebrow">{title}</span><h2>{stateStep==="main"?prompt:q===8?"更接近你的，是哪一种生命感？":"你最想先补回哪一种连接？"}</h2><div className="options">{stateStep==="main"?groupOptions.map((g,i)=><button key={i} onClick={()=>chooseStateGroup(i)}><em>{String.fromCharCode(65+i)}</em><span>{g.label}</span></button>):subOptions[stateGroup].map((option,i)=><button key={`${option.dim}-${i}`} onClick={()=>finishState(option.dim)}><em>{String.fromCharCode(65+i)}</em><span>{option.text}</span></button>)}</div></>}
     </section><button className="back" onClick={()=>{if(stateStep==="sub")setStateStep("main");else if(q>0)setQ(q-1)}}>← 返回上一题</button></main>;
   }
-  if(stage==="tie") return <main className="quiz-shell"><Forest/><header><span>最后一瞥</span><div className="progress"><i style={{width:"100%"}}/></div></header><section className="question-card">
+  if(stage==="tie") return <main className="quiz-shell"><Forest/><header><span>最后确认</span><div className="progress"><i style={{width:"98%"}}/></div></header><section className="question-card">
     <span className="eyebrow">两股同样清晰的力量</span><h2>如果未来一个月，只能为生活重新打开一扇门，你更愿意先走向哪一种感受？</h2><div className="options">{tiedPrimary.map((dim,i)=><button key={dim} onClick={()=>choosePrimary(dim)}><em>{String.fromCharCode(65+i)}</em><span>{profiles[dim].plain}</span></button>)}</div><p className="note">这次选择只决定展开哪一条解读，不会改变你的八维生命之花。</p>
   </section></main>;
   if(stage==="loading") return <main className="full-screen loading"><Forest/><div className="glyph-ring"><span>✦</span></div><p>水脉正在汇合，岩层正在显露……</p></main>;
-  const p=profiles[primary], np=profiles[nourished], ip=profiles[invited], enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited], recommendation=culturalRecommendations[primary];
+  const p=profiles[primary], ip=profiles[invited], enhancement=profileEnhancements[primary], invitedEnhancement=profileEnhancements[invited], recommendation=culturalRecommendations[primary];
   return <main className="result"><Forest/><section className="result-intro"><span className="eyebrow">你的生命感来源</span><h1>{p.title}</h1><p className="result-english">{p.english}</p><p className="invocation">{p.invocation}</p><p className="plain">{p.plain}</p><span className="scroll-hint">向下展开你的生命之花 ↓</span></section>
     <figure className="result-art"><img src={enhancement.image} alt={`${p.title}生命感来源插画`}/></figure>
     <section className="result-section flower"><span className="section-no">01</span><p className="eyebrow">你的八维生命之花</p><h2>八条水脉，<br/>共同流经你</h2><Radar scores={scores}/><p className="note">它呈现的是你更常使用哪些方式与世界连接，不代表能力高低。</p></section>
     <section className="result-section reading"><LifeLineArt dim={primary}/><span className="section-no">02</span><p className="eyebrow">{p.title} · 生命连接解读</p><h2>你通常如何<br/>与世界连接</h2><p className="lead-copy">{enhancement.connection}</p><div className="definition"><b>这意味着什么？</b><p>{enhancement.distinction}</p></div><h3>你如何被点亮</h3><p>{p.alive}</p><h3>什么总会吸引你</h3><p>{p.attract}</p><h3>它如何进入生活</h3><p>{p.life}</p><div className="reframe"><span>请别误解这一部分自己</span><p>{p.reframe}</p></div></section>
-    <section className="result-section nourished"><Totem dim={nourished} small/><p className="eyebrow">最近，什么正在托住你</p><h2>{np.title}</h2><p>{np.nourish}</p></section>
     <section className="result-section invitation"><LifeLineArt dim={invited}/><span className="section-no">03</span><p className="eyebrow">而此刻，生命邀请你</p><h2>{ip.title}</h2><p className="invitation-copy">{ip.now}</p><div className="signals"><b>它可能正在这样提醒你</b>{invitedEnhancement.signals.map(signal=><p key={signal}>· {signal}</p>)}</div>{primary!==invited&&<p className="bridge">你长久依靠「{p.title}」获得生命感，而此刻「{ip.title}」正邀请你补回另一种呼吸。它们并不矛盾。</p>}</section>
     <section className="result-section actions"><span className="section-no">04</span><p className="eyebrow">给你的具体建议</p><h2>只选一个入口，也已经足够</h2>{ip.actions.map((a,i)=><article key={a}><span>{["现在 · 10 分钟","找一天 · 半天","接下来 · 四周"][i]}</span><p>{a}</p></article>)}</section>
     <section className="result-section culture"><span className="section-no">05</span><p className="eyebrow">为你的内在书架留两束光</p><h2>一部电影，一本书</h2><div className="culture-grid"><article><span>为你推荐的电影</span><h3>{recommendation.film.title}</h3><small>{recommendation.film.meta}</small><p>{recommendation.film.why}</p></article><article><span>为你推荐的书</span><h3>{recommendation.book.title}</h3><small>{recommendation.book.meta}</small><p>{recommendation.book.why}</p></article></div><blockquote><p>“{recommendation.quote.text}”</p><cite>— {recommendation.quote.author}</cite></blockquote></section>
