@@ -13,7 +13,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--forest); color: var(--ink); font-family: var(--body); }
+body { margin: 0; background: var(--forest); color: var(--ink); font-family: var(--body); font-kerning: normal; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 button { font: inherit; }
 button:disabled { cursor: wait; opacity: .72; }
 
@@ -86,21 +86,21 @@ button:disabled { cursor: wait; opacity: .72; }
 .label-0{left:50%;top:-4%}.label-1{left:91%;top:10%}.label-2{left:104%;top:50%}.label-3{left:91%;top:91%}.label-4{left:50%;top:104%}.label-5{left:9%;top:91%}.label-6{left:-4%;top:50%}.label-7{left:9%;top:10%}
 .score-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; font: 12px var(--ui); }.score-list div { position: relative; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.08); }.score-list em { float: right; color: var(--gold); font-style: normal; }.score-list i { position: absolute; bottom: -1px; left: 0; height: 1px; background: var(--gold); }
 
-.reading > p,.invitation > p { color: #cdd5ca; font-size: 15px; line-height: 1.92; letter-spacing: .012em; text-align: left; line-break: strict; word-break: normal; text-wrap: pretty; }
+.reading > p,.invitation > p { color: #cdd5ca; font-family: var(--body); font-size: 15px; line-height: 1.92; letter-spacing: 0; word-spacing: 0; text-align: justify; text-align-last: left; text-justify: inter-ideograph; line-break: strict; word-break: normal; overflow-wrap: break-word; text-wrap: pretty; }
 .reading h3 { margin: 36px 0 10px; color: #d9c998; font-family: var(--display); font-size: 20px; font-weight: 400; letter-spacing: .06em; }
 .definition { margin: 34px 0 46px; padding: 25px 24px; border: 1px solid rgba(98,154,139,.2); background: linear-gradient(135deg,rgba(57,125,120,.22),rgba(46,74,59,.16)); box-shadow: inset 3px 0 rgba(198,168,102,.5); }
 .definition b,.signals b { display: block; margin-bottom: 12px; color: var(--gold); font: 600 11px/1.6 var(--ui); letter-spacing: .12em; }
-.definition p { margin: 0; color: #dce2d8; font-size: 14px; line-height: 1.9; letter-spacing: .012em; text-align: left; line-break: strict; text-wrap: pretty; }
-.reframe { margin-top: 42px; padding: 24px; border: 1px solid rgba(198,168,102,.25); background: rgba(46,74,59,.2); }.reframe span { color: var(--gold); font: 11px var(--ui); letter-spacing: .1em; }.reframe p { margin-bottom: 0; font-size: 14px; line-height: 1.9; letter-spacing: .012em; text-align: left; }
-.invitation { text-align: center; }.invitation > p { text-align: center; }.invitation-copy { font-size: 17px!important; }.signals { margin: 32px 0; padding: 22px; border: 1px solid rgba(255,255,255,.08); text-align: left; }.signals p { margin: 9px 0; color: #b9c6bb; font-size: 13px; line-height: 1.7; }.bridge { color: #8da294!important; font-size: 13px!important; }
-.actions article { padding: 22px 0; border-top: 1px solid rgba(255,255,255,.1); }.actions article span { color: var(--gold); font: 11px var(--ui); letter-spacing: .08em; }.actions article p { margin: 10px 0 0; font-size: 16px; line-height: 1.75; letter-spacing: .025em; }
+.definition p { margin: 0; color: #dce2d8; font-family: var(--body); font-size: 14px; line-height: 1.9; letter-spacing: 0; word-spacing: 0; text-align: justify; text-align-last: left; text-justify: inter-ideograph; line-break: strict; word-break: normal; overflow-wrap: break-word; text-wrap: pretty; }
+.reframe { margin-top: 42px; padding: 24px; border: 1px solid rgba(198,168,102,.25); background: rgba(46,74,59,.2); }.reframe span { color: var(--gold); font: 11px var(--ui); letter-spacing: .1em; }.reframe p { margin-bottom: 0; font-family: var(--body); font-size: 14px; line-height: 1.9; letter-spacing: 0; word-spacing: 0; text-align: justify; text-align-last: left; text-justify: inter-ideograph; line-break: strict; word-break: normal; }
+.invitation { text-align: center; }.invitation-copy { font-size: 17px!important; text-align: justify!important; text-align-last: left!important; }.signals { margin: 32px 0; padding: 22px; border: 1px solid rgba(255,255,255,.08); text-align: left; }.signals p { margin: 9px 0; color: #b9c6bb; font-size: 13px; line-height: 1.7; }.bridge { color: #8da294!important; font-size: 13px!important; text-align: justify!important; text-align-last: left!important; }
+.actions article { padding: 22px 0; border-top: 1px solid rgba(255,255,255,.1); }.actions article span { color: var(--gold); font: 11px var(--ui); letter-spacing: .08em; }.actions article p { margin: 10px 0 0; font-size: 16px; line-height: 1.8; letter-spacing: 0; word-spacing: 0; text-align: justify; text-align-last: left; text-justify: inter-ideograph; }
 .culture { padding-top: 84px; border-top: 1px solid rgba(198,168,102,.15); }
 .culture-grid { display: grid; gap: 14px; margin-top: 32px; }
 .culture-grid article { padding: 26px 24px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(145deg,rgba(28,59,49,.58),rgba(10,34,28,.52)); }
 .culture-grid article > span { color: var(--gold); font: 600 10px/1.6 var(--ui); letter-spacing: .12em; }
 .culture-grid h3 { margin: 13px 0 6px; color: #eeeadd; font-family: var(--display); font-size: 23px; font-weight: 400; letter-spacing: .045em; }
 .culture-grid small { color: #81998a; font: 11px/1.6 var(--ui); }
-.culture-grid p { margin: 18px 0 0; color: #c6d0c5; font-size: 14px; line-height: 1.9; letter-spacing: .012em; text-align: left; line-break: strict; text-wrap: pretty; }
+.culture-grid p { margin: 18px 0 0; color: #c6d0c5; font-family: var(--body); font-size: 14px; line-height: 1.9; letter-spacing: 0; word-spacing: 0; text-align: justify; text-align-last: left; text-justify: inter-ideograph; line-break: strict; word-break: normal; overflow-wrap: break-word; text-wrap: pretty; }
 .culture blockquote { margin: 18px 0 0; padding: 34px 25px 28px; border: 0; background: rgba(198,168,102,.09); text-align: center; }
 .culture blockquote p { margin: 0; color: #e2dac2; font-family: var(--display); font-size: clamp(19px,5vw,26px); line-height: 1.75; letter-spacing: .035em; text-wrap: balance; }
 .culture blockquote cite { display: block; margin-top: 15px; color: #91a395; font: 11px/1.5 var(--ui); font-style: normal; letter-spacing: .08em; }
